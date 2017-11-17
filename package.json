@@ -1,0 +1,20 @@
+{
+  "name": "react-photo-gallery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mightycastle/react-photo-gallery.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mightycastle/react-photo-gallery/issues"
+  },
+  "homepage": "https://github.com/mightycastle/react-photo-gallery#readme"
+}
