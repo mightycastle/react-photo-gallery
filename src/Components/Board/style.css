@@ -1,0 +1,25 @@
+.board {
+  margin: 0 60px;
+  overflow: hidden;
+}
+
+.board__row {
+  white-space: nowrap;
+  margin: 5px 0;
+}
+
+.board__item {
+  display: inline-block;
+  margin: 0 5px;
+  position: relative;
+}
+
+.board__image {
+  height: 100%;
+}
+
+.item__action {
+  position: absolute;
+  top: 0;
+  right: 0;
+}

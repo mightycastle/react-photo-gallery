@@ -1,3 +1,42 @@
-h1 {
-  color: #00008B;
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.button__scroll {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 50%;
+  margin-top: -12px;
+  background: transparent;
+  border: none;
+}
+
+.button__scroll:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border: solid black;
+  border-width: 0 4px 4px 0;
+  box-sizing: border-box;
+}
+
+.button__scroll-left {
+  left: 20px;
+}
+
+.button__scroll-left:after {
+  transform: rotate(135deg);
+}
+
+.button__scroll-right {
+  right: 20px;
+}
+
+.button__scroll-right:after {
+  transform: rotate(-45deg);
 }
