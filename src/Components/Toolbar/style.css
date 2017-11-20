@@ -1,0 +1,16 @@
+.toolbar {
+  height: 60px;
+  margin: 0 60px;
+}
+
+.toolbar__menu {
+  display: inline-block;
+}
+
+.toolbar__chips {
+  display: inline-block;
+}
+
+.toolbar__chip-item {
+  display: inline-block;
+}

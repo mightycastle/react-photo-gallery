@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import Card, { CardActions, CardMedia } from 'material-ui/Card';
 import IconButton from 'material-ui/IconButton';
 import FavoriteIcon from 'material-ui-icons/Favorite';
+import cx from 'classnames';
 
 import PropTypes from 'prop-types';
 
@@ -18,6 +19,14 @@ const groupImages = (images) => {
     results[index % 3].push(image);
   });
   return results;
+}
+
+const isSelected = (item, { selectedStyles, selectedQualities }) =>
+  intersect(selectedStyles, item.metaData.designStyle).length > 0 ||
+  intersect(selectedQualities, item.metaData.qualityStandard).length > 0
+
+const intersect = (a, b) => {
+  return [...new Set(a)].filter(x => new Set(b).has(x));
 }
 
 const getPageOffset = (images, rowHeight, boardWidth, page) => {
@@ -105,7 +114,8 @@ class Board extends Component {
     const { rowHeight, boardWidth } = this.state;
     const imageHeight = rowHeight - IMAGE_PADDING;
     const groups = groupImages(images);
-
+    console.log(this.props);
+    
     return (
       <div className='board' ref={(ele) => this.board = ele}>
         {groups.map((rowImages, index) => (
@@ -119,7 +129,9 @@ class Board extends Component {
           >
             {rowImages.map((image, imageIndex) => (
               <Card 
-                className='board__item'
+                className={cx('board__item', {
+                  'board__item--selected': isSelected(image, this.props)
+                })}
                 key={imageIndex}
                 style={{
                   height: imageHeight,
@@ -147,7 +159,9 @@ class Board extends Component {
 Board.propTypes = {
   images: PropTypes.array.isRequired,
   page: PropTypes.number.isRequired,
-  setPageSize: PropTypes.func.isRequired
+  setPageSize: PropTypes.func.isRequired,
+  selectedStyles: PropTypes.array.isRequired,
+  selectedQualities: PropTypes.array.isRequired
 };
 
 export default Board;

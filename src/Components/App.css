@@ -25,18 +25,18 @@ html, body {
   box-sizing: border-box;
 }
 
-.button__scroll-left {
+.button__scroll--left {
   left: 20px;
 }
 
-.button__scroll-left:after {
+.button__scroll--left:after {
   transform: rotate(135deg);
 }
 
-.button__scroll-right {
+.button__scroll--right {
   right: 20px;
 }
 
-.button__scroll-right:after {
+.button__scroll--right:after {
   transform: rotate(-45deg);
 }
