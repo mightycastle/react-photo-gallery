@@ -10,6 +10,8 @@ import PropTypes from 'prop-types';
 //css
 require('./style.css');
 
+const IMAGE_PADDING = 5;
+
 const groupImages = (images) => {
   const results = [[], [], []];
   images.forEach((image, index) => {
@@ -18,13 +20,56 @@ const groupImages = (images) => {
   return results;
 }
 
+const getPageOffset = (images, rowHeight, boardWidth, page) => {
+  let totalWidth = 0;
+  let offset = 0;
+  let curPage = 0;
+  let index = 0;
+  let lastWidth = 0;
+  const imageHeight = rowHeight - IMAGE_PADDING;
+
+  while(curPage < page && index < images.length) {
+    totalWidth += lastWidth;
+    const image = images[index];
+    const width = image.width * imageHeight / image.height + IMAGE_PADDING * 2;
+    if (offset + width > boardWidth) {
+      offset = 0;
+      curPage ++;
+    }
+    offset += width;
+    lastWidth = width;
+    index ++;
+  }
+  return totalWidth;
+}
+
+const getPageSize = (images, rowHeight, boardWidth) => {
+  let offset = 0;
+  let pageSize = 1;
+  let index = 0;
+  const imageHeight = rowHeight - IMAGE_PADDING;
+
+  while(index < images.length) {
+    const image = images[index];
+    const width = image.width * imageHeight / image.height + IMAGE_PADDING * 2;
+    if (offset + width > boardWidth) {
+      offset = 0;
+      pageSize ++;
+    }
+    offset += width;
+    index ++;
+  }
+  return pageSize;
+}
+
 class Board extends Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      rowHeight: 1
+      rowHeight: 1,
+      boardWidth: 1
     };
 
     this.handleWindowResize = this.handleWindowResize.bind(this);
@@ -35,12 +80,20 @@ class Board extends Component {
     this.calculateRowHeight();
   }
 
-  calculateRowHeight() {
+  calculateRowHeight() {    
+    const { images, setPageSize } = this.props;
     const rowHeight = (window.innerHeight - 90) / 3;
+    const boardWidth = this.board.offsetWidth;
 
     this.setState({
-      rowHeight
+      rowHeight,
+      boardWidth
     });
+
+    const groups = groupImages(images);
+    const pageSizes = groups.map((images) => getPageSize(images, rowHeight, boardWidth));
+    const maxPageSize = Math.max(...pageSizes);
+    setPageSize(maxPageSize);
   }
 
   handleWindowResize() {
@@ -48,21 +101,29 @@ class Board extends Component {
   }
 
   render() {
-    const { images } = this.props;
-    const { rowHeight } = this.state;
+    const { images, page } = this.props;
+    const { rowHeight, boardWidth } = this.state;
+    const imageHeight = rowHeight - IMAGE_PADDING;
     const groups = groupImages(images);
 
     return (
-      <div className='board'>
+      <div className='board' ref={(ele) => this.board = ele}>
         {groups.map((rowImages, index) => (
-          <div className='board__row' key={index}>
-            {rowImages.map((image, index) => (
+          <div 
+            className='board__row' 
+            key={index}
+            style={{
+              height: rowHeight,
+              transform: `translateX(-${getPageOffset(rowImages, rowHeight, boardWidth, page)}px)`
+            }}
+          >
+            {rowImages.map((image, imageIndex) => (
               <Card 
                 className='board__item'
-                key={index}
+                key={imageIndex}
                 style={{
-                  height: rowHeight,
-                  width: image.width * rowHeight / image.height
+                  height: imageHeight,
+                  width: image.width * imageHeight / image.height
                 }}
               >
                 <CardMedia 
@@ -84,7 +145,9 @@ class Board extends Component {
 }
 
 Board.propTypes = {
-  images: PropTypes.array.isRequired
+  images: PropTypes.array.isRequired,
+  page: PropTypes.number.isRequired,
+  setPageSize: PropTypes.func.isRequired
 };
 
 export default Board;
